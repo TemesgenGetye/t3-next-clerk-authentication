@@ -1,6 +1,6 @@
 # clerk authentication with next js and trpc
 
-this is a demo project for clerk authentication with next js and trpc in miinimal setup
+this is a demo project for clerk authentication with next js and trpc in miinimal setup and custome signup and login page
 fell free to use this project as a reference for your own project
 
 ## how to run this project
