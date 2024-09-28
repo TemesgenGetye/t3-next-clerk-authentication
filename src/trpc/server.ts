@@ -1,30 +1,31 @@
-import "server-only";
-
-import { createHydrationHelpers } from "@trpc/react-query/rsc";
+"server-only";
+import { initTRPC } from "@trpc/server";
 import { headers } from "next/headers";
-import { cache } from "react";
 
-import { createCaller, type AppRouter } from "~/server/api/root";
-import { createTRPCContext } from "~/server/api/trpc";
-import { createQueryClient } from "./query-client";
-
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
- */
-const createContext = cache(() => {
+// Define the context structure explicitly
+export const createContext = async ({ req }: { req: Request }) => {
   const heads = new Headers(headers());
   heads.set("x-trpc-source", "rsc");
 
-  return createTRPCContext({
+  return {
     headers: heads,
-  });
+    req,
+  };
+};
+
+// Initialize tRPC with the defined context type
+const t = initTRPC.context<typeof createContext>().create();
+
+// Exporting the router and procedure methods
+export const router = t.router;
+export const procedure = t.procedure;
+
+// Define your API router and procedures
+export const appRouter = router({
+  hello: procedure.query(() => {
+    return "Hello, World!";
+  }),
 });
 
-const getQueryClient = cache(createQueryClient);
-const caller = createCaller(createContext);
-
-export const { trpc: api, HydrateClient } = createHydrationHelpers<AppRouter>(
-  caller,
-  getQueryClient
-);
+// Export type definition of the API
+export type AppRouter = typeof appRouter;

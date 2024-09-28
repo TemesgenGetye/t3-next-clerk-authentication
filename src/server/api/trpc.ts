@@ -12,13 +12,28 @@ import { db } from "~/server/db"; // Import your database connection, adjust pat
  * using Clerk’s `getAuth`. This allows access to the database and the authenticated user
  * in tRPC procedures.
  */
-export const createTRPCContext = async (req: NextRequest) => {
-  const auth = getAuth(req); // Clerk authentication - extracts user data from request headers
+// export const createTRPCContext = async (req: NextRequest) => {
+//   const auth = getAuth(req); // Clerk authentication - extracts user data from request headers
 
+//   return {
+//     db, // Your database connection
+//     auth, // Clerk auth object containing user session info
+//     ...req, // Include the original request object
+//   };
+// };
+
+export const createTRPCContext = async ({
+  opts,
+  request,
+}: {
+  opts: { headers: Headers };
+  request: NextRequest;
+}) => {
+  const auth = getAuth(request);
   return {
-    db, // Your database connection
-    auth, // Clerk auth object containing user session info
-    ...req, // Include the original request object
+    db,
+    auth,
+    ...opts,
   };
 };
 

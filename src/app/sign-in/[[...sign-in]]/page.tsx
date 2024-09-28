@@ -38,7 +38,7 @@ export default function SignInForm() {
         // Handle any other case where sign-in is incomplete
         setError("Sign-in incomplete. Please complete additional steps.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setError("Invalid username or password.");
       console.error("Sign-in error:", err);
     }
